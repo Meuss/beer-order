@@ -11,6 +11,7 @@ export default {
       return this.$store.state.count;
     },
   },
+  // beer filling simple tween
   watch: {
     count() {
       gsap.to('.beer-container', {

@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     count: 0,
     currentPhrase: "None, it's only nine!",
+    // phrases depending on count state
     phrases: {
       0: "None, it's only nine!",
       1: 'Ok, maybe a little bit.',
@@ -24,8 +25,10 @@ export default new Vuex.Store({
   mutations: {
     changeCount(state, value) {
       if (state.count > value && value != 0) {
+        // if removed some beer
         state.currentPhrase = 'Actually, I changed my mind';
       } else {
+        // else added beer
         state.currentPhrase = state.phrases[value];
       }
       state.count = value;

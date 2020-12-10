@@ -17,9 +17,11 @@ export default {
     },
   },
   watch: {
+    // phrase animation
     phrase(newValue) {
       const that = this;
       const tl = gsap.timeline();
+      // fade out to top
       tl.fromTo(
         'h3',
         {
@@ -32,9 +34,11 @@ export default {
           ease: 'power1.inOut',
         },
       );
+      // change phrase in the middle of timeline
       tl.add(function() {
         that.setPhrase = newValue;
       }, '>');
+      // fade in from bottom
       tl.fromTo(
         'h3',
         {

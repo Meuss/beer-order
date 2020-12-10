@@ -29,6 +29,7 @@
     </div>
     <PlaceOrder />
     <Beer />
+    <Bubbles />
   </div>
 </template>
 
@@ -38,6 +39,7 @@ import Slider from './components/Slider.vue';
 import Phrase from './components/Phrase.vue';
 import PlaceOrder from './components/PlaceOrder.vue';
 import Beer from './components/Beer.vue';
+import Bubbles from './components/Bubbles.vue';
 
 export default {
   name: 'App',
@@ -47,6 +49,7 @@ export default {
     Phrase,
     PlaceOrder,
     Beer,
+    Bubbles,
   },
   methods: {
     reloadPage() {

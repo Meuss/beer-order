@@ -11,6 +11,7 @@ export default {
   name: 'Slider',
   data() {
     return {
+      // https://www.npmjs.com/package/vue-slider-component, mostly default options
       options: {
         dotSize: 26,
         width: 'auto',

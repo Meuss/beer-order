@@ -86,23 +86,24 @@ export default {
     },
   },
   watch: {
+    // foam animation
     count(value) {
       const delay = 1;
       this.tl.fromTo(
         '#foam-1',
         { y: -40, autoAlpha: 0 },
         { y: 25, autoAlpha: 1, duration: 0.7 },
-        delay - 0.5,
+        delay - 0.3,
       );
       this.tl.fromTo(
         '#foam-2',
         { y: -40, autoAlpha: 0 },
         { y: 25, autoAlpha: 1, duration: 0.7 },
-        delay - 0.3,
+        delay - 0.2,
       );
       this.tl.fromTo(
         '#bubble-1',
-        { y: 0, autoAlpha: 0 },
+        { y: 10, autoAlpha: 0 },
         { y: 25, autoAlpha: 1, duration: 0.7 },
         delay,
       );
