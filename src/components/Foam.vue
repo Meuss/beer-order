@@ -87,7 +87,7 @@ export default {
   },
   watch: {
     count(value) {
-      const delay = 1.5;
+      const delay = 1;
       this.tl.fromTo(
         '#foam-1',
         { y: -40, autoAlpha: 0 },
