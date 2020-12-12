@@ -30,6 +30,9 @@
     <PlaceOrder />
     <Beer />
     <Bubbles />
+    <a target="_blank" href="https://github.com/Meuss/beer-order" class="github">
+      <img src="./assets/github-icon.svg" alt="github repo" />
+    </a>
   </div>
 </template>
 
@@ -102,5 +105,13 @@ h1 {
 h2 {
   margin: 40px auto 50px;
   font-size: 30px;
+}
+.github {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  img {
+    width: 40px;
+  }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div v-if="bubbles.length" id="bubbles">
     <div
-      v-for="(bubble, index) in bubbles"
-      :key="index"
-      :class="`bubble bubble-${index}`"
+      v-for="(bubble, key) in bubbles"
+      :key="key"
+      :class="`bubble bubble-${bubble.key}`"
       :style="bubble.style"
     ></div>
   </div>
@@ -16,6 +16,7 @@ export default {
   data() {
     return {
       bubbles: [],
+      key: 0,
     };
   },
   computed: {
@@ -24,28 +25,56 @@ export default {
     },
   },
   watch: {
-    count(value) {
-      this.manageBubbles(value);
+    count() {
+      this.hideBubbles();
     },
   },
   mounted() {},
   methods: {
-    manageBubbles() {
-      // animate out any previous bubbles
-      this.hideBubbles();
-      // animate in new bubbles
-      this.animateBubbles();
+    // animate out any previous bubbles
+    hideBubbles() {
+      const bubbles = gsap.utils.toArray('.bubble');
+      // if bubbles exist, hide them
+      if (this.bubbles.length) {
+        gsap.to(bubbles, {
+          y: '-=10',
+          autoAlpha: 0,
+          stagger: 0.01,
+          duration: 0.2,
+          onComplete: removePreviousBubbles,
+        });
+      } else {
+        removePreviousBubbles();
+      }
+      // after animation, remove the previous bubbles
+      const that = this;
+      function removePreviousBubbles() {
+        setTimeout(() => {
+          that.bubbles = [];
+          // trigger new bubbles afterwards
+          that.createRandomBubbles();
+        }, 100);
+      }
     },
+    // create new random bubbles
     createRandomBubbles() {
-      // remove previous bubbles
-      this.bubbles = [];
-      // create 10 random bubbles
-      for (let i = 0; i < 10; i++) {
-        // set values for top, left, width, height
+      let randomAmount;
+      // don't create bubbles if beer count = 0
+      if (this.count === 0) {
+        randomAmount = 0;
+      } else if (this.count < 5) {
+        randomAmount = Math.floor(this.getRandomNumber(2, 5));
+      } else {
+        // more bubbles if more beer!
+        randomAmount = Math.floor(this.getRandomNumber(5, 10));
+      }
+      for (let i = 0; i < randomAmount; i++) {
+        // set random values for top, left, width, height of new bubbles
         const top = Math.floor(this.getRandomNumber(40, 95));
         const left = Math.floor(this.getRandomNumber(5, 95));
         const width = Math.floor(this.getRandomNumber(5, 25));
         const newBubble = {
+          key: this.key,
           style: {
             top: `${top}%`,
             left: `${left}%`,
@@ -53,47 +82,54 @@ export default {
             height: `${width}px`,
           },
         };
+        // key is to keep track of individual bubbles (for gsap animation)
+        this.key++;
         // push into the array of bubbles
         this.bubbles.push(newBubble);
       }
+      // animate in new bubbles
+      this.animateBubbles();
     },
-    // bubbles animation in
+    // bubbles animation in method
     animateBubbles() {
       const bubbles = gsap.utils.toArray('.bubble');
+      // no animation if no bubbles
       if (this.count != 0) {
-        bubbles.forEach((bubble, index) => {
+        // animate each existing bubble
+        bubbles.forEach(bubble => {
+          // get the bubble key from DOM
+          const domKey = bubble.classList[1];
           const moveAmount = -Math.floor(this.getRandomNumber(40, 100));
-          const duration = Math.round((this.getRandomNumber(1, 50) / 10) * 100) / 100;
+          const duration = Math.round((this.getRandomNumber(10, 50) / 10) * 100) / 100;
           gsap.fromTo(
-            `.bubble-${index}`,
+            `.${domKey}`,
             { y: 0 },
-            { y: moveAmount, duration: duration, ease: 'power1.Out' },
+            { y: moveAmount, duration: duration, ease: 'power4.Out' },
           );
           gsap.fromTo(
-            `.bubble-${index}`,
+            `.${domKey}`,
             { autoAlpha: 0 },
-            { autoAlpha: 1, duration: 0.3, ease: 'power1.Out' },
+            { autoAlpha: 1, duration: 0.3, ease: 'none' },
           );
-          if (Math.random() < 0.5) {
-            gsap.to(`.bubble-${index}`, {
-              autoAlpha: 0,
-              duration: 0.3,
+          // randomly fade some bubbles out
+          if (Math.random() < 0.3) {
+            gsap.to(`.${domKey}`, {
+              scale: 0,
+              duration: 0.2,
               ease: 'power1.Out',
-              delay: duration + 0.1,
+              delay: duration + 0.2,
+            });
+          }
+          if (Math.random() < 0.5) {
+            gsap.to(`.${domKey}`, {
+              scale: 0,
+              duration: 0.2,
+              ease: 'power1.Out',
+              delay: duration + 1.2,
             });
           }
         });
       }
-    },
-    // bubbles animate out
-    hideBubbles() {
-      const bubbles = gsap.utils.toArray('.bubble');
-      if (bubbles.length) {
-        gsap.to(bubbles, { y: 10, autoAlpha: 0, stagger: 0.01, duration: 0.2 });
-      }
-      this.createRandomBubbles();
-      // empty previous bubbles
-      // this.bubbles = [];
     },
     // utility function
     getRandomNumber(min, max) {
@@ -109,7 +145,7 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 200px;
+  height: 300px;
 }
 .bubble {
   position: absolute;
@@ -118,23 +154,5 @@ export default {
   z-index: -1;
   visibility: hidden;
   border: 1px solid #f2994a;
-  // &.bubble-0 {
-  //   background-color: blue;
-  // }
-  // &.bubble-1 {
-  //   background-color: red;
-  // }
-  // &.bubble-2 {
-  //   background-color: green;
-  // }
-  // &.bubble-3 {
-  //   background-color: yellow;
-  // }
-  // &.bubble-4 {
-  //   background-color: pink;
-  // }
-  // &.bubble-5 {
-  //   background-color: black;
-  // }
 }
 </style>
